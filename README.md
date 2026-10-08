@@ -1,23 +1,83 @@
-# Ft_Printf Results
-<img width="1500" alt="Screen Shot 2021-11-26 at 11 22 36 AM" src="https://user-images.githubusercontent.com/58959408/143511584-92704c45-b887-4b10-be57-9b2a3de6e18f.png">
+# ft_printf
 
-# Ft_Printf Tester Link
-https://github.com/Abaker-Hype/42-Cursus-Tester
+A small C implementation of the core `printf` conversions, kept as a 42 project repository. The public function writes to standard output and returns its character count.
 
-# Ft_Printf
+```c
+int ft_printf(const char *format, ...);
+```
 
-A partial reimplementation of the printf in C. Handles only the following conversions.
+## Supported conversions
 
-| Conversion | Short Description                                                                             |
-|------------|-----------------------------------------------------------------------------------------------|
-| %c         | Print a single character.                                                                     |
-| %s         | Print a string of characters.                                                                 |
-| %p         | The void * pointer argument is printed in hexadecimal.                                        |
-| %d         | Print a decimal (base 10) number.                                                             |
-| %i         | Print an integer in base 10.                                                                  |
-| %u         | Print an unsigned decimal (base 10) number.                                                   |
-| %x         | Print a number in hexadecimal (base 16), with lowercase.                                      |
-| %X         | Print a number in hexadecimal (base 16), with uppercase.                                      |
-| %%         | Print a percent sign.                                                                         |
+| Conversion | Output |
+| --- | --- |
+| `%c` | A single character |
+| `%s` | A string |
+| `%p` | A pointer value in hexadecimal with a `0x` prefix |
+| `%d`, `%i` | A signed decimal integer |
+| `%u` | An unsigned decimal integer |
+| `%x` | An unsigned hexadecimal integer, lowercase |
+| `%X` | An unsigned hexadecimal integer, uppercase |
+| `%%` | A literal percent sign |
 
-See the [subject.pdf](https://github.com/pasqualerossi/Printf/blob/main/en.subject.pdf) for further details.
+The implementation does not parse field width, precision, length modifiers, or formatting flags. The root Makefile has no bonus target.
+
+## Build
+
+Requires GCC, Make, `ar`, and a system providing POSIX `write`.
+
+**Current source note:** `ft_printf.c` begins with a stray comma before its opening comment. A source rebuild requires removing that comma first; the commands below describe the existing Makefile after that correction.
+
+```sh
+git clone https://github.com/Efeblk/42_printf.git
+cd 42_printf
+make re
+```
+
+The Makefile compiles with `-Wall -Wextra -Werror` and creates `libftprintf.a`.
+
+| Command | Purpose |
+| --- | --- |
+| `make` | Build the library |
+| `make clean` | Remove object files |
+| `make fclean` | Remove object files and the library |
+| `make re` | Rebuild from source |
+
+## Usage
+
+Save this as `main.c` in the repository root:
+
+```c
+#include "ft_printf.h"
+
+int main(void)
+{
+    ft_printf("Hello, %s! Number: %d, hex: %x, progress: 100%%\n",
+        "world", 42, 42u);
+    return (0);
+}
+```
+
+After rebuilding the library:
+
+```sh
+gcc -Wall -Wextra -Werror main.c libftprintf.a -o example
+./example
+```
+
+Expected output for this example:
+
+```text
+Hello, world! Number: 42, hex: 2a, progress: 100%
+```
+
+## Repository guide
+
+- `ft_printf.c` — format scanning and variadic argument dispatch.
+- `ft_numbers.c` — decimal, hexadecimal, and pointer output.
+- `ft_words.c` — character and string output.
+- `ft_printf.h` — public function and helper declarations.
+- `printfTester/` — bundled third-party tester; see its [README](printfTester/README.md).
+
+## Credits
+
+The source file headers credit `prossi`. The bundled tester includes its own documentation and credits; preserve those when reusing the project.
